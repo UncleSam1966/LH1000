@@ -1,0 +1,115 @@
+##################################################################################################
+echo 
+echo "This runonce script needs to be run only once to create the startup directory "
+echo "and missing components to enable dropbear and a few utilities.It replaces the "
+echo "tr69 binary with a symlink to runme so it is invoked at boot. After the device"
+echo "reboots you can access the modem via ssh."
+echo 
+echo -n "If you wish to proceed, enter y otherwise just press [Enter] to stop: "
+read
+if [ "$REPLY" != "y" -a "$REPLY" != "Y" ]; then
+  exit
+fi
+
+##################################################################################################
+# Create the ll shortcut command for ls -l
+cat <<"EOF" > /bin/ll
+ls -l "$@" 
+EOF
+chmod +x /bin/ll
+chown 1008:1008 /bin/ll
+
+##################################################################################################
+# Create the startup and sub directories
+mkdir /startup
+mkdir /startup/etc
+mkdir /startup/etc/dropbear
+mkdir /startup/etc/init.d
+
+##################################################################################################
+# Create dropbear rsa and dss keys
+dropbearkey -t rsa -f /startup/etc/dropbear/dropbear_rsa_host_key
+dropbearkey -t dss -f /startup/etc/dropbear/dropbear_dss_host_key
+
+##################################################################################################
+# Create the dropbear service
+cat <<"EOF" > /startup/etc/init.d/dropbear
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2015 OpenWrt.org
+
+START=19
+STOP=50
+
+PROG=/usr/sbin/dropbear
+NAME=dropbear
+APP=/etc/config/dropbear
+
+# Use procd if available otherwise revert to old method
+if type procd > /dev/null; then 
+  USE_PROCD=1
+else
+  SERVICE_DAEMONIZE=1
+  SERVICE_WRITE_PID=1
+fi
+
+start_service(){
+  procd_open_instance
+  procd_set_param command $PROG
+  procd_append_param command "${APP}"
+  procd_set_param respawn # respawn on crash
+  procd_set_param stdout 1 # forward stdout of the command to logd
+  procd_set_param stderr 1 # same for stderr
+  procd_add_jail "$APP" ubus log 
+  procd_close_instance
+}
+
+# procd not available
+start() {
+  service_start "$PROG" "$APP"
+}
+
+stop() {
+  service_stop $PROG
+}
+EOF
+chmod +x /startup/etc/init.d/dropbear
+
+##################################################################################################
+# Create the runme script
+cat <<"EOF" > /startup/runme
+#!/bin/sh 
+
+# set root pasword
+echo -e "root\nroot" | passwd
+
+# create an empty /etc/rc.common on older firmware
+touch /etc/rc.common
+
+# Copy the dropbear rsa and dss keys to /etc/dropbear
+ln -s /startup/etc/dropbear/dropbear_rsa_host_key /etc/dropbear/dropbear_rsa_host_key
+ln -s /startup/etc/dropbear/dropbear_dss_host_key /etc/dropbear/dropbear_dss_host_key
+
+# copy dropbear service, enable and start it
+ln -s /startup/etc/init.d/dropbear /etc/init.d/dropbear
+/etc/init.d/dropbear enable
+/etc/init.d/dropbear start
+
+# On older firmware check if dropbear service has started if not start it directly
+pgrep dropbear &>/dev/null || /usr/sbin/dropbear -E
+
+# Create some other useful symlinks
+ln -s /www/hninh987R47san82.htm /www/sys_firmware.htm
+mv /www/js/menu.js /www/js/menu.js.old
+ln -s /www/js/menu-super.js /www/js/menu.js
+
+EOF
+chmod +x /startup/runme
+
+##################################################################################################
+# Create a symlink tr69 to point to runme (this will replace the existing tr69 binary)
+rm /usr/sbin/tr69
+ln -s /startup/runme /usr/sbin/tr69
+
+##################################################################################################
+# Reboot and login as root via ssh with password root
+reboot
