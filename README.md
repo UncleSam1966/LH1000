@@ -1,5 +1,4 @@
-# LH1000
-Hacking the Arcadyan LH1000
+# Hacking the Arcadyan LH1000
 
 To acquire a Telnet connection on port 23, reset the router and take out any sim cards. Plug in a LAN cable to access the GUI.
 
