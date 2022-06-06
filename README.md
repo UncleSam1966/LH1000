@@ -41,4 +41,4 @@ To make these dropbear changes permanent, download and extract the archive direc
 
         curl -skL  https://raw.githubusercontent.com/UncleSam1966/LH1000/master/runonce.tar.gz | tar -xzvf - | sh
 
-Then run it manually with `./runonce`.
+Then run it manually with `./runonce`. Note that the runonce script will delete itself when it's done.
