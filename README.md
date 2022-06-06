@@ -35,3 +35,8 @@ Remember to set the root password by running
 
 Note: Earlier firmware versions don't have the chpasswd function defined in Busybox.
 
+To make these dropbear changes permanent, download and extract the archive directly to the device with the following command:
+
+        curl -skL  https://raw.githubusercontent.com/UncleSam1966/LH1000/master/runonce.tar.gz | tar -xzvf - | sh
+
+Then run it manually with `./runonce`.
