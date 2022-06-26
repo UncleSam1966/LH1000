@@ -14,7 +14,7 @@ Then telnet via port 23 and you should have a root shell straight away.
 
 The following items may not survive a reboot, especially in later versions of the firmware, as /etc is just a symbolic link to /tmp/etc, which gets flushed every reboot.
 
-There is no dropbear service under /etc/init.d, hence it does not start up and therefore there's no ssh. You can usually start dropbear just by running
+There is no dropbear service under /etc/init.d, hence it does not start up and therefore there's no ssh. You can usually start dropbear by running
 
     /usr/sbin/dropbear
 
