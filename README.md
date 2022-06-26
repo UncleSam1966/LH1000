@@ -25,7 +25,7 @@ Create the requisite keys by running
     dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key
     dropbearkey -t dss -f /etc/dropbear/dropbear_dss_host_key
 
-Then start dropbear ust by running
+Then start dropbear by running
 
     /usr/sbin/dropbear
 
