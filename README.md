@@ -39,6 +39,6 @@ Note: Earlier firmware versions don't have the chpasswd function defined in Busy
 
 To make these dropbear changes permanent, download and extract the archive directly to the device with the following command:
 
-        sh -c "'./'$(curl -skL  https://raw.githubusercontent.com/UncleSam1966/LH1000/master/runonce.tar.gz | tar -xzvf -)"
+        sh -c "'./'$(curl -skL https://raw.githubusercontent.com/UncleSam1966/LH1000/master/runonce.tar.gz | tar -xzvf -)"
 
 Note that the runonce script will delete itself when it's done.
