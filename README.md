@@ -35,6 +35,16 @@ Remember to set the root password by running
 
 Note: Earlier firmware versions don't have the chpasswd function defined in Busybox.
 
+# Setting the correct date, time and timezone
+
+By default the system clock is usually stored as UTC. Run the following to set the timezone (e.g. Perth, Australia)
+
+    ln -s /usr/share/zoneinfo/Perth /etc/localtime
+
+Now synchronise the date and time with your nearest time server (e.g. Australia) by running
+
+    /usr/sbin/ntpclient -s -h 0.au.pool.ntp.org
+
 # Making these changes permanant
 
 To make these dropbear changes permanent, download and extract the archive directly to the device with the following command:
