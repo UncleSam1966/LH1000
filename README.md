@@ -39,7 +39,7 @@ Note: Earlier firmware versions don't have the chpasswd function defined in Busy
 
 By default the system clock is usually stored as UTC. Run the following to set the timezone (e.g. Perth, Australia)
 
-    ln -s /usr/share/zoneinfo/Perth /etc/localtime
+    ln -sf /usr/share/zoneinfo/Perth /etc/localtime
 
 Now synchronise the date and time with your nearest time server (e.g. Australia) by running
 
