@@ -1,3 +1,5 @@
+# UPDATE: This works only on firmware below 0.19.07r. This latest firmware appears to have patched this vulnerability.
+
 # Acquiring root access on the Arcadyan LH1000
 
 To acquire a Telnet connection on port 23, reset the router and take out any sim cards. Plug in a LAN cable to access the GUI.
